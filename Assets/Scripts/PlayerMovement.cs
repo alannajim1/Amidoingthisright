@@ -40,13 +40,13 @@ public class PlayerMovement : MonoBehaviour
     void Update()
     {
         // Check for input
-        if (Input.GetButtonDown("Jump") && grounded)
+        if (Input.GetKeyDown(KeyCode.W) && grounded)
         {
             rb.AddForce(Vector3.up * jumpStrength, ForceMode2D.Impulse);
         }
 
         // check for long jump
-        if (Input.GetButton("Jump"))
+        if (Input.GetKey(KeyCode.W))
         {
             jumpPressed = true;
         }
