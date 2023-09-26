@@ -1,7 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.InputSystem;
 
 public class PlayerMovement : MonoBehaviour
 {
@@ -11,16 +10,11 @@ public class PlayerMovement : MonoBehaviour
     private bool jumpPressed;
     private bool grounded;
 
-    private Rigidbody rb;
-
-    private PlayerInput input;
-    UnityEngine.InputSystem.InputAction jumpAction;
+    private Rigidbody2D rb;
 
     void Start()
     {
-        rb = GetComponent<Rigidbody>();
-        input = GetComponent<PlayerInput>();
-        jumpAction = input.actions["Jump"];
+        rb = GetComponent<Rigidbody2D>();
     }
 
 
@@ -48,7 +42,7 @@ public class PlayerMovement : MonoBehaviour
         // Check for input
         if (Input.GetButtonDown("Jump") && grounded)
         {
-            rb.AddForce(Vector3.up * jumpStrength, ForceMode.Impulse);
+            rb.AddForce(Vector3.up * jumpStrength, ForceMode2D.Impulse);
         }
 
         // check for long jump
@@ -69,13 +63,20 @@ public class PlayerMovement : MonoBehaviour
         // increase gravity if falling
         if (rb.velocity.y < 0)
         {
-            rb.velocity += Vector3.up * Physics2D.gravity.y * (fallMultiplier - 1) * Time.fixedDeltaTime;
+            rb.velocity += Vector2.up * Physics2D.gravity.y * (fallMultiplier - 1) * Time.fixedDeltaTime;
         }
 
         // increase gravity for low jumps
         else if (rb.velocity.y > 0 && !jumpPressed)
         {
-            rb.velocity += Vector3.up * Physics2D.gravity.y * (lowJumpMultiplier - 1) * Time.fixedDeltaTime;
+            rb.velocity += Vector2.up * Physics2D.gravity.y * (lowJumpMultiplier - 1) * Time.fixedDeltaTime;
+        }
+
+        if (grounded)
+        {
+            Vector2 v = rb.velocity;
+            v.y = 0;
+            rb.velocity = v;
         }
     }
 }
